@@ -1,30 +1,21 @@
 import { useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import React, { useState } from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    Text,
-    TouchableOpacity,
-    View
-} from "react-native";
-import {
-    deleteCartItem,
-    fetchCartItems,
-    updateCartItemQuantity
-} from "../../firebase/firebaseCartAPI";
+import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import { deleteCartItem, fetchCartItems, updateCartItemQuantity } from "../../firebase/firebaseCartAPI";
 
-
+// Cart screen tab
 export default function CartScreen() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Fetches cart items from Firebase on each load
     async function reload() {
         const items = await fetchCartItems();
         setItems(items);
     }
 
+    // Uses the reload function whenever the screen comes into focus
     useFocusEffect(
         React.useCallback(() => {
             setLoading(true);
@@ -32,22 +23,24 @@ export default function CartScreen() {
         }, [])
     );
 
+    // Checks notifications permissions and sends the notification
     async function sendOrderNotification() {
         const { status } = await Notifications.requestPermissionsAsync();
         if (status !== "granted") {
-            alert("Enable notifications to receive order updates!");
+            alert("Please enable permissions for notifications!");
             return;
         }
 
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Your order is on its way!",
-                body: "Thanks for checking out — your delivery is coming soon.",
+                body: "Thank you for ordering!",
             },
             trigger: null,
         });
     }
 
+    // Controls the button for removing one quantity of an item with the Firebase API
     function handleRemove(item: any) {
         Alert.alert(
             "Remove Item",
@@ -69,6 +62,7 @@ export default function CartScreen() {
         );
     }
 
+    // Styles the cart screen while it is loading
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#323232" }}>
@@ -77,6 +71,7 @@ export default function CartScreen() {
         );
     }
 
+    // Styles the cart screen while the cart is empty
     if (items.length === 0) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#323232" }}>
@@ -85,10 +80,11 @@ export default function CartScreen() {
         );
     }
 
+    // Styles the cart screen while the cart has existing items in it
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "#323232" }}>
             <FlatList
-                contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+                contentContainerStyle={{ padding: 20, paddingBottom: 100, backgroundColor: "#323232" }}
                 data={items}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
@@ -96,12 +92,12 @@ export default function CartScreen() {
                         style={{
                             padding: 20,
                             marginBottom: 16,
-                            backgroundColor: "#323232",
+                            backgroundColor: "#ddcba4",
                             borderRadius: 12,
                         }}
                     >
-                        <Text style={{ fontSize: 18, color: "#f0f0f0" }}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
-                        <Text style={{ marginTop: 4, color: "#f0f0f0" }}>Quantity: {item.quantity}</Text>
+                        <Text style={{ fontSize: 18, color: "#000000" }}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
+                        <Text style={{ marginTop: 4, color: "#000000" }}>Quantity: {item.quantity}</Text>
 
                         <TouchableOpacity
                             style={{
@@ -138,7 +134,7 @@ export default function CartScreen() {
                     onPress={() =>
                         Alert.alert(
                             "Checkout",
-                            "Do you want to checkout with these items?",
+                            "Do you want to checkout?",
                             [
                                 { text: "Cancel", style: "cancel" },
                                 {

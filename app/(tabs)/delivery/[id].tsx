@@ -2,12 +2,14 @@ import { addCartItem } from "@/firebase/firebaseCartAPI";
 import { useLocalSearchParams } from "expo-router";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 
+// Enforces a type with a guaranteed string label
 type Tile = {
     label: string;
 };
 
+// Now using Tiles, allows for dynamic selection based on the [id]
 const tileSets: Record<string, Tile[]> = {
-    pizzaff: [{ label: "Pepperoni Pizza" }, { label: "Margherita Pizza" }, { label: "Cheese Pizza"}, { label: "Meat Lovers Pizza"} ],
+    pizzaff: [{ label: "Pepperoni Pizza" }, { label: "Margherita Pizza" }, { label: "Cheese Pizza" }, { label: "Meat Lovers Pizza" }],
     burgerff: [{ label: "Plain Burger" }, { label: "Cheeseburger" }, { label: "Mushroom and Swiss" }],
     coffeeshop: [{ label: "Black Coffee" }, { label: "Flat White" }, { label: "Espresso" }, { label: "Cappuccino" }],
     friedchicken: [{ label: "Chicken Basket" }, { label: "Chicken Nuggets" }, { label: "Chicken Fingers" }, { label: "BBQ Sauce" }],
@@ -16,10 +18,13 @@ const tileSets: Record<string, Tile[]> = {
 };
 
 export default function DeliveryDetailScreen() {
+    // Gets parameters from current route
     const { id, label } = useLocalSearchParams<{ id: string; label?: string }>();
 
+    // Makes array of Tile objects based on the provided id
     const tiles: Tile[] = id ? tileSets[id] || [] : [];
 
+    // Adds to cart on press
     async function handlePress(tileLabel: string) {
         try {
             await addCartItem(tileLabel.toLowerCase());
@@ -36,22 +41,22 @@ export default function DeliveryDetailScreen() {
                 {label?.toUpperCase()}
             </Text>
 
-        {tiles.map((tile, index) => (
-            <Pressable
-                key={index}
-                onPress={() => handlePress(tile.label)}
-            >
-            <View
-                style={{
-                    padding: 20,
-                    backgroundColor: "#ddcba4",
-                    borderRadius: 16,
-                }}
-            >
-              <Text style={{ fontSize: 18 }}>{tile.label}</Text>
-            </View>
-            </Pressable>
-        ))}
-    </ScrollView>
+            {tiles.map((tile, index) => (
+                <Pressable
+                    key={index}
+                    onPress={() => handlePress(tile.label)}
+                >
+                    <View
+                        style={{
+                            padding: 20,
+                            backgroundColor: "#ddcba4",
+                            borderRadius: 16,
+                        }}
+                    >
+                        <Text style={{ fontSize: 18 }}>{tile.label}</Text>
+                    </View>
+                </Pressable>
+            ))}
+        </ScrollView>
     );
 }

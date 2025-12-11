@@ -1,7 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Notifications from "expo-notifications";
 import { Tabs } from "expo-router";
+import { LogBox } from "react-native";
 
+// Added to avoid issue with using newest Expo Go version
+LogBox.ignoreLogs([/expo-notifications/i]);
+
+// Initializes notification handler
 Notifications.setNotificationHandler({
     handleNotification: async () => {
         return {
@@ -14,7 +19,7 @@ Notifications.setNotificationHandler({
     }
 });
 
-
+// High level layout formatting of the tabs
 export default function Layout() {
     return (
         <Tabs screenOptions={{

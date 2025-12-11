@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+// Each tile on the first delivery screen
 const tiles = [
     { id: "pizzaff", label: "Pizza Fast Food", location: { latitude: 40.81472, longitude: -73.00007 }, image: { uri: "https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg" } },
     { id: "burgerff", label: "Burger Fast Food", location: { latitude: 40.88316, longitude: -74.29085 }, image: { uri: "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg" } },
@@ -15,6 +16,7 @@ export default function DeliveryScreen() {
 
     return (
         <ScrollView contentContainerStyle={{ padding: 20, gap: 20, backgroundColor: "#323232" }}>
+            {/* Each tile is mapped to a format with text, image, and two buttons*/}
             {tiles.map((tile) => (
                 <View
                     key={tile.id}
@@ -38,6 +40,7 @@ export default function DeliveryScreen() {
                     />
 
                     <View style={{ flexDirection: "row", gap: 10 }}>
+                        {/* Jumps to the id screen using the tile id */}
                         <TouchableOpacity
                             style={{
                                 flex: 1,
@@ -54,6 +57,7 @@ export default function DeliveryScreen() {
                             <Text style={{ color: "white" }}>View Items</Text>
                         </TouchableOpacity>
 
+                        {/* Jumps to the map screen using the tile location */}
                         <TouchableOpacity
                             style={{
                                 flex: 1,

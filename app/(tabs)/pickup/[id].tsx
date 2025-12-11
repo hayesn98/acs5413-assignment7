@@ -2,12 +2,14 @@ import { addCartItem } from "@/firebase/firebaseCartAPI";
 import { useLocalSearchParams } from "expo-router";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 
+// Enforces a type with a guaranteed string label
 type Tile = {
     label: string;
 };
 
+// Now using Tiles, allows for dynamic selection based on the [id]
 const tileSets: Record<string, Tile[]> = {
-    steakres: [{ label: "Filet Dinner" }, { label: "T-Bone Dinner" }, { label: "Hanger Dinner"}, { label: "Short Rib Dinner"} ],
+    steakres: [{ label: "Filet Dinner" }, { label: "T-Bone Dinner" }, { label: "Hanger Dinner" }, { label: "Short Rib Dinner" }],
     sushires: [{ label: "California Roll" }, { label: "Rainbow Roll" }, { label: "Sashimi Sampler" }, { label: "Miso Soup" }],
     seafoodres: [{ label: "Fried Shrimp Basket" }, { label: "Lobster Spaghetti" }, { label: "Mahi Mahi Dinner" }, { label: "Ahi Tuna Salad" }],
     britishpub: [{ label: "Fish and Chips" }, { label: "Bangers and Mash" }, { label: "Shepherd's Pie" }, { label: "Veal Cutlet" }],
@@ -16,10 +18,13 @@ const tileSets: Record<string, Tile[]> = {
 };
 
 export default function PickupDetailScreen() {
+    // Gets parameters from current route
     const { id, label } = useLocalSearchParams<{ id: string, label?: string }>();
 
+    // Makes array of Tile objects based on the provided id
     const tiles: Tile[] = id ? tileSets[id] || [] : [];
 
+    // Adds to cart on press
     async function handlePress(tileLabel: string) {
         try {
             await addCartItem(tileLabel.toLowerCase());
